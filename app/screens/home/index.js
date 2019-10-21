@@ -42,7 +42,7 @@ class Home extends React.Component {
             console.log("accessToken", currentUser);
 
             Linking.openURL("https://drive.google.com/drive/u/1/folders/159Hwm6c1H0NNyl0DEuas5ZW0itZ3dQXR"); //temp fix
-            await this.props.store.getAPIdata({ currentUser });
+            await this.props.store.getAPIdata({ currentUser }); //mobX store api call
         } catch (error) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
