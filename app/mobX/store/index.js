@@ -1,17 +1,38 @@
-import { ResourceStore } from '@reststate/mobx';
-import api from '../services';
+import { observable, runInAction, decorate } from 'mobx';
+import service from "../services"
+class store {
+    constructor() {
+        this.service = new service();
+    }
 
-const fetchStore = new ResourceStore({
-    name: 'fetchData',
-    httpClient: api,
-});
+    apidata = {
+        model: []
+    };
 
-const pushStore = new ResourceStore({
-    name: 'storeData',
-    httpClient: api,
-});
+    getAPIdata = async (currentUser) => {
+        try {
+            var params = {
+                accessToken: currentUser,
+            };
+            const data = await this.service.get(params);
 
-export {
-    fetchStore,
-    pushStore
-};
+            if (data) {
+                console.log(data)
+                runInAction(() => {
+                    this.apidata = data;
+                });
+            }
+
+        } catch (error) {
+            runInAction(() => {
+                this.status = "error";
+            });
+        }
+    };
+}
+decorate(store, {
+    apidata: observable
+})
+
+
+export default new store();
